@@ -78,16 +78,10 @@ export default class RegistrationScreen extends Component {
   }
 
   render() {
-<<<<<<< HEAD
-    /*if (!this.state.isReady) {
-      return <Expo.AppLoading />
-    }*/
-=======
     /**if (!this.state.isReady) {
     *  return <Expo.AppLoading />
     *}
     */
->>>>>>> 521a7b9fa625483517dbc0daadff0c0942f8cbb7
     return (
       <Container>
         <Header
