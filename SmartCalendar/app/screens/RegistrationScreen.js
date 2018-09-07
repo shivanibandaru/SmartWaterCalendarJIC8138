@@ -34,9 +34,9 @@ export default class RegistrationScreen extends Component {
   * Check if a user is trying to register with valid credentials
   */
   verifyNewUserCredentials(anEmail, aFirstName, aLastName, aGTID, aPassword, aConfirmPassword) {
-    if (!(anEmail.length > 0)
-      && !(aFirstName.length > 0)
-      && !(aLastName.length > 0)
+    if ((anEmail.length > 0)
+      && (aFirstName.length > 0)
+      && (aLastName.length > 0)
       && (aGTID.length === 9)
       && (aPassword === aConfirmPassword)
       && (aPassword.length >= 8)) {
@@ -48,9 +48,11 @@ export default class RegistrationScreen extends Component {
     } else if (aGTID.length != 9) {
       Alert.alert("Please enter a valid GTID.");
     } else if (aPassword.length < 6) {
-      Alert.alert("The password must be at least 6 characters long.");
-    } else {
+      Alert.alert("The password must be at least 8 characters long.");
+    } else if (aPassword !== aConfirmPassword) {
       Alert.alert("Password and Confirm password do not match");
+    } else {
+      Alert.alert("Sorry I don't know what's wrong ")
     }
     return false;
   }
@@ -76,9 +78,10 @@ export default class RegistrationScreen extends Component {
   }
 
   render() {
-    if (!this.state.isReady) {
-      return <Expo.AppLoading />
-    }
+    /**if (!this.state.isReady) {
+    *  return <Expo.AppLoading />
+    *}
+    */
     return (
       <Container>
         <Header
