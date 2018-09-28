@@ -82,4 +82,4 @@ export default class App extends React.Component {
 }
 //export default () => <RegistrationScreen />;
 
-import * as firebase from "firebase";
+//import * as firebase from "firebase";
