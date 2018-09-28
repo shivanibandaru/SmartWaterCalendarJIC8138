@@ -95,7 +95,7 @@ export default class RegistrationScreen extends Component {
         var ref = database.ref();
         firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
           uid = String(firebase.auth().currentUser.uid)
-          var usersRef = ref.child("users/" + uid;
+          var usersRef = ref.child("users/" + uid);
           usersRef.set({
             uid: {
               email: theEmail,
