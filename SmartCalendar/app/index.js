@@ -80,3 +80,6 @@ export default class App extends React.Component {
 		return <SmartCalendarAppNavigator />;
 	}
 }
+//export default () => <RegistrationScreen />;
+
+import * as firebase from "firebase";

@@ -3,6 +3,20 @@ import Expo from 'expo';
 import { Alert, View } from 'react-native';
 import { Button, Container, Content, Form, Header, Input, Item, Label, Text } from 'native-base';
 
+import firebase from "firebase/app";
+import "firebase/database";
+
+// firebase configuration data
+global.firebaseConfig = {
+  apiKey: "AIzaSyAG9qRaaixzJOVltp_m4vo2UJP-LHDd9W0",
+  authDomain: "smartwatercalendarjic8138.firebaseapp.com",
+  databaseURL: "https://smartwatercalendarjic8138.firebaseio.com",
+  projectId: "smartwatercalendarjic8138",
+  storageBucket: "smartwatercalendarjic8138.appspot.com",
+  messagingSenderId: "707210951412"
+};
+
+
 export default class RegistrationScreen extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +31,9 @@ export default class RegistrationScreen extends Component {
     };
     this.verifyNewUserCredentials = this.verifyNewUserCredentials.bind(this);
     this.onRegistrationTap = this.onRegistrationTap.bind(this);
-  }
+    this.app = firebase.initializeApp(firebaseConfig);
+    this.database = firebase.database()
+   }
 
   /**
   * Load fonts before doing anything
@@ -73,9 +89,29 @@ export default class RegistrationScreen extends Component {
          theGTID,
           thePassword,
            theConfirmPassword);
+    // if user has valid credentials, authenticate, log them in, and store their data in database
      if (validUser) {
        //Add to database
-       //navigating to home for now
+        var ref = database.ref();
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
+          uid = String(firebase.auth().currentUser.uid)
+          var usersRef = ref.child("users/" + uid;
+          usersRef.set({
+            uid: {
+              email: theEmail,
+              first: theFirstName,
+              last: theLastName,
+              gtid: theGTID
+            },
+          });
+        }).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          print(errorMessage)
+          // ...
+        });
+        //navigating to home for now
        navigate('Home') //navigate('Calendar'); //navigate to calendar upon registering
      }
   }
