@@ -57,7 +57,7 @@ export default class RegistrationScreen extends Component {
     return false;
   }
 
-  onRegistrationTap(even) {
+  onRegistrationTap(event) {
     const theEmail = this.state.email;
     const theFirstName = this.state.firstName;
     const theLastName = this.state.lastName;
@@ -78,10 +78,6 @@ export default class RegistrationScreen extends Component {
   }
 
   render() {
-    /**if (!this.state.isReady) {
-    *  return <Expo.AppLoading />
-    *}
-    */
     return (
       <Container>
         <Header
