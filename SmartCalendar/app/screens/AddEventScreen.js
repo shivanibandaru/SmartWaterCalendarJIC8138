@@ -45,10 +45,11 @@ export default class AddEventScreen extends Component {
       this._hideTimePicker();
     };
 
-  onValueChange(value: boolean) {
+  onValueChange(value) {
     this.setState({
       isAllDay: value
     });
+  }
 
   onAddEventTap(event) {
 
@@ -102,8 +103,8 @@ export default class AddEventScreen extends Component {
               selectedValue={this.state.selected}
               onValueChange={this.onValueChange.bind(this)}
             >
-              <Picker.Item label="Yes" value= true />
-              <Picker.Item label="No" value= false />
+              <Picker.Item label="Yes" value= {true} />
+              <Picker.Item label="No" value= {false} />
             </Picker>
             <DatePicker
               defaultDate={new Date(2018, 4, 4)}
