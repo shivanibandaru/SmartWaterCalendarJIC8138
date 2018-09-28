@@ -3,7 +3,7 @@ import Expo from 'expo';
 import { Alert, View } from 'react-native';
 import { Button, Container, Content, Form, Header, Input, Item, Label, Text } from 'native-base';
 
-export default class Login extends Component {
+export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -24,10 +24,13 @@ export default class Login extends Component {
   }
 
   onLoginTap(even) {
+    const { navigate } = this.props.navigation;
 
     var validUser = this.validateForm();
      if (validUser) {
        //Check database for match
+       //navigating to home for now
+       navigate('Home') //navigate('Calendar'); //navigate to calendar upon login
      }
   }
 

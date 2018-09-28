@@ -64,6 +64,7 @@ export default class RegistrationScreen extends Component {
     const theGTID = this.state.gtId;
     const thePassword = this.state.password;
     const theConfirmPassword = this.state.confirmPassword;
+    const { navigate } = this.props.navigation;
 
     var validUser = this.verifyNewUserCredentials(
       theEmail,
@@ -74,6 +75,8 @@ export default class RegistrationScreen extends Component {
            theConfirmPassword);
      if (validUser) {
        //Add to database
+       //navigating to home for now
+       navigate('Home') //navigate('Calendar'); //navigate to calendar upon registering
      }
   }
 
@@ -86,7 +89,7 @@ export default class RegistrationScreen extends Component {
       <Container>
         <Header
           leftComponent={{color: '#fff' }}
-          centerComponent={{ text: 'Registration', style: { color: '#fff' } }}
+          centerComponent={{ text: 'Registration', style: { color: '#000' } }}
           rightComponent={{color: '#fff' }}
         />
         <Content>
