@@ -34,12 +34,12 @@ export default class RegistrationScreen extends Component {
   * Check if a user is trying to register with valid credentials
   */
   verifyNewUserCredentials(anEmail, aFirstName, aLastName, aGTID, aPassword, aConfirmPassword) {
-    if (!(anEmail.length > 0)
-      && !(aFirstName.length > 0)
-      && !(aLastName.length > 0)
+    if ((anEmail.length > 0)
+      && (aFirstName.length > 0)
+      && (aLastName.length > 0)
       && (aGTID.length === 9)
       && (aPassword === aConfirmPassword)
-      && (aPassword.length >= 8)) {
+      && (aPassword.length >= 6)) {
         return true;
     } else if (anEmail.length === 0) {
       Alert.alert("Please enter a valid email.");
