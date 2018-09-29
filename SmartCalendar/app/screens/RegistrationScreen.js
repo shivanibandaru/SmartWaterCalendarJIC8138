@@ -5,6 +5,7 @@ import { Button, Container, Content, Form, Header, Input, Item, Label, Text } fr
 
 import firebase from "firebase/app";
 import "firebase/database";
+import "firebase/auth";
 
 // firebase configuration data
 global.firebaseConfig = {
@@ -27,12 +28,11 @@ export default class RegistrationScreen extends Component {
       email: "",
       password: "",
       confirmPassword: "",
-      isReady: false
+      isReady: false,
+      firebase: firebase.initializeApp(firebaseConfig)
     };
     this.verifyNewUserCredentials = this.verifyNewUserCredentials.bind(this);
     this.onRegistrationTap = this.onRegistrationTap.bind(this);
-    this.app = firebase.initializeApp(firebaseConfig);
-    this.database = firebase.database()
    }
 
   /**
@@ -80,7 +80,6 @@ export default class RegistrationScreen extends Component {
     const theGTID = this.state.gtId;
     const thePassword = this.state.password;
     const theConfirmPassword = this.state.confirmPassword;
-    const { navigate } = this.props.navigation;
 
     var validUser = this.verifyNewUserCredentials(
       theEmail,
@@ -91,28 +90,26 @@ export default class RegistrationScreen extends Component {
            theConfirmPassword);
     // if user has valid credentials, authenticate, log them in, and store their data in database
      if (validUser) {
-       //Add to database
-        var ref = database.ref();
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
-          uid = String(firebase.auth().currentUser.uid)
-          var usersRef = ref.child("users/" + uid);
-          usersRef.set({
-            uid: {
-              email: theEmail,
-              first: theFirstName,
-              last: theLastName,
-              gtid: theGTID
-            },
+        console.log(this.state.firebase);
+        this.state.firebase.auth().createUserWithEmailAndPassword(theEmail, thePassword).then(function(user) {
+          Alert.alert("user created - ");
+          var uid = firebase.auth().currentUser.uid;
+          // this is where the database insert fucks up, .push didnt work either
+          this.state.firebase.database.ref("users/" + uid).set({
+            email: theEmail,
+            first: theFirstName,
+            last: theLastName,
+            gtid: theGTID
+          }).catch(function(error) {
+            Alert.alert("error: " + error.message);
           });
         }).catch(function(error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
-          print(errorMessage)
+          console.log(errorMessage)
           // ...
         });
-        //navigating to home for now
-       navigate('Home') //navigate('Calendar'); //navigate to calendar upon registering
      }
   }
 
@@ -121,7 +118,7 @@ export default class RegistrationScreen extends Component {
       <Container>
         <Header
           leftComponent={{color: '#fff' }}
-          centerComponent={{ text: 'Registration', style: { color: '#000' } }}
+          centerComponent={{ text: 'Registration', style: { color: '#fff' } }}
           rightComponent={{color: '#fff' }}
         />
         <Content>
