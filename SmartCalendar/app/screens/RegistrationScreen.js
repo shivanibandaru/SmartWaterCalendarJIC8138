@@ -33,6 +33,12 @@ export default class RegistrationScreen extends Component {
     };
     this.verifyNewUserCredentials = this.verifyNewUserCredentials.bind(this);
     this.onRegistrationTap = this.onRegistrationTap.bind(this);
+    // will sign the current user out upon entering the registration page
+    this.state.firebase.auth().signOut().then(function() {
+        console.log('Signed Out');
+      }, function(error) {
+        console.error('Sign Out Error', error);
+      });
    }
 
   /**
@@ -88,28 +94,48 @@ export default class RegistrationScreen extends Component {
          theGTID,
           thePassword,
            theConfirmPassword);
-    // if user has valid credentials, authenticate, log them in, and store their data in database
-     if (validUser) {
-        console.log(this.state.firebase);
-        this.state.firebase.auth().createUserWithEmailAndPassword(theEmail, thePassword).then(function(user) {
-          Alert.alert("user created - ");
-          var uid = firebase.auth().currentUser.uid;
-          // this is where the database insert fucks up, .push didnt work either
-          this.state.firebase.database.ref("users/" + uid).set({
-            email: theEmail,
-            first: theFirstName,
-            last: theLastName,
-            gtid: theGTID
+
+    // if user has valid credentials
+    if (validUser) {
+      // maintion this.state within scope of onAuthStateChanged listener 
+      var state = this.state;
+      // listener to check when the authentication state has changed ex: when user is successfully registered and logged in
+      this.state.firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in.
+          // insert information of current user into database under their unique uid
+          state.firebase.database().ref("users/" + user.uid).set({
+            email: state.email,
+            first: state.firstName,
+            last: state.lastName,
+            gtid: state.gtId
           }).catch(function(error) {
             Alert.alert("error: " + error.message);
           });
-        }).catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(errorMessage)
-          // ...
-        });
+        Alert.alert("added to database!")
+        } else {
+          // No user is signed in.
+        }
+      });
+
+      // create an account based on email and password conbination, identifiable by unique uid
+      // note: firebase auto signs in the user upon successful creation
+      this.state.firebase.auth().createUserWithEmailAndPassword(theEmail, thePassword).catch(function(error) {
+        // TODO: create error message to send back to the user upon unsuccessful account creation; ex: email already associated with an existing account
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        Alert.alert(error.message)
+        // ...
+      });
+
+      // sign out the newly created user account from firebase
+      firebase.auth().signOut().then(function() {
+        console.log('Signed Out');
+      }, function(error) {
+        console.error('Sign Out Error', error);
+      });
+
+        
      }
   }
 
