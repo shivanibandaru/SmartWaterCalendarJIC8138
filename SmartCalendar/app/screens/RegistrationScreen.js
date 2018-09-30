@@ -3,20 +3,7 @@ import Expo from 'expo';
 import { Alert, View } from 'react-native';
 import { Button, Container, Content, Form, Header, Input, Item, Label, Text } from 'native-base';
 
-import firebase from "firebase/app";
-import "firebase/database";
-import "firebase/auth";
-
-// firebase configuration data
-global.firebaseConfig = {
-  apiKey: "AIzaSyAG9qRaaixzJOVltp_m4vo2UJP-LHDd9W0",
-  authDomain: "smartwatercalendarjic8138.firebaseapp.com",
-  databaseURL: "https://smartwatercalendarjic8138.firebaseio.com",
-  projectId: "smartwatercalendarjic8138",
-  storageBucket: "smartwatercalendarjic8138.appspot.com",
-  messagingSenderId: "707210951412"
-};
-
+import Database from "./Database.js";
 
 export default class RegistrationScreen extends Component {
   constructor(props) {
@@ -29,16 +16,17 @@ export default class RegistrationScreen extends Component {
       password: "",
       confirmPassword: "",
       isReady: false,
-      firebase: firebase.initializeApp(firebaseConfig)
+      firebase: Database.getDB()
     };
     this.verifyNewUserCredentials = this.verifyNewUserCredentials.bind(this);
     this.onRegistrationTap = this.onRegistrationTap.bind(this);
     // will sign the current user out upon entering the registration page
+
     this.state.firebase.auth().signOut().then(function() {
-        console.log('Signed Out');
-      }, function(error) {
-        console.error('Sign Out Error', error);
-      });
+      console.log('Signed Out');
+    }, function(error) {
+      console.error('Sign Out Error', error);
+    });
    }
 
   /**
@@ -112,7 +100,7 @@ export default class RegistrationScreen extends Component {
           }).catch(function(error) {
             Alert.alert("error: " + error.message);
           });
-        Alert.alert("added to database!")
+        Alert.alert("User account successfully created!")
         } else {
           // No user is signed in.
         }
@@ -129,7 +117,7 @@ export default class RegistrationScreen extends Component {
       });
 
       // sign out the newly created user account from firebase
-      firebase.auth().signOut().then(function() {
+      this.state.firebase.auth().signOut().then(function() {
         console.log('Signed Out');
       }, function(error) {
         console.error('Sign Out Error', error);

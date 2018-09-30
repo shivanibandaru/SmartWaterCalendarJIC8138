@@ -3,16 +3,21 @@ import Expo from 'expo';
 import { Alert, View } from 'react-native';
 import { Button, Container, Content, Form, Header, Input, Item, Label, Text } from 'native-base';
 
+import Database from "./Database.js";
+
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      // temp firebase instance
+      firebase: Database.getDB()
     };
     this.validateForm = this.validateForm.bind(this);
     this.onLoginTap = this.onLoginTap.bind(this);
+
   }
 
   validateForm() {
@@ -28,9 +33,18 @@ export default class LoginScreen extends Component {
 
     var validUser = this.validateForm();
      if (validUser) {
-       //Check database for match
-       //navigating to home for now
-       navigate('Home') //navigate('Calendar'); //navigate to calendar upon login
+      this.state.firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(function() {
+        Alert.alert("sucessfully logged in user!");
+      }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        Alert.alert("There is no user account under these credentials, Please try again.");
+        // ...
+      });
+      //Check database for match
+      //navigating to home for now
+      //navigate('Home') //navigate('Calendar'); //navigate to calendar upon login
      }
   }
 
